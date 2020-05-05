@@ -144,7 +144,7 @@ def IngredientesEnHamburguesa(request, pki, pkh):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     elif request.method == 'DELETE':
-        if hamburguesa.ingredientes.filter(ingredientes_id=pki):
+        if hamburguesa.ingredientes.filter(id=pki):
             hamburguesa.ingredientes.remove(ingrediente)
             return Response(status=200)
         else:
