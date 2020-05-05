@@ -56,12 +56,6 @@ class IngredientesList(APIView):
 
 class HamburguesaDetail(APIView):
 
-    def check_id(self, pk):
-        if isinstance(pk, int) :
-            return True
-        else:
-            return False
-
     def get_object(self, pk):
         try:
             return Hamburguesa.objects.get(pk=pk)
@@ -87,16 +81,14 @@ class HamburguesaDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
+        if not pk.isnumeric():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         hamburguesa = self.get_object(pk)
         hamburguesa.delete()
         return HttpResponse(status=200)
 
 
 class IngredienteDetail(APIView):
-
-    def check_id(self, pk):
-        if isinstance(pk, int) is False:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def get_object(self, pk):
         try:
@@ -105,7 +97,8 @@ class IngredienteDetail(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        self.check_id(pk)
+        if not pk.isnumeric():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         ingrediente = self.get_object(pk)
         serializer = IngredienteSerializer(ingrediente, context={'request': request})
         return Response(serializer.data)
@@ -130,7 +123,9 @@ class IngredienteDetail(APIView):
 @api_view(['PUT', 'DELETE'])
 def IngredientesEnHamburguesa(request, pki, pkh):
 
-    if isinstance(pki, int) is False:
+    if not pki.isnumeric():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    if not pkh.isnumeric():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     try:
