@@ -74,7 +74,7 @@ class HamburguesaDetail(APIView):
 
     def patch(self, request, pk, format=None):
         hamburguesa = self.get_object(pk)
-        serializer = HamburguesaSerializer(hamburguesa, data=request.data, context={'request': request})
+        serializer = HamburguesaSerializer(hamburguesa, data=request.data, context={'request': request}, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
