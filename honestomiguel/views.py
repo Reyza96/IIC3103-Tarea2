@@ -77,6 +77,9 @@ class HamburguesaDetail(APIView):
         serializer = HamburguesaSerializer(hamburguesa, data=request.data, context={'request': request}, partial=True)
         if serializer.is_valid():
             serializer.save()
+            i = serializer.data
+            for k in range(len((i['ingredientes']))):
+                i['ingredientes'][k] = {'path': i['ingredientes'][k]}
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -141,6 +144,9 @@ def IngredientesEnHamburguesa(request, pki, pkh):
     if request.method == 'PUT':
         hamburguesa.ingredientes.add(ingrediente)
         serializer = HamburguesaSerializer(hamburguesa, context={'request': request})
+        i = serializer.data
+        for k in range(len((i['ingredientes']))):
+            i['ingredientes'][k] = {'path': i['ingredientes'][k]}
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     elif request.method == 'DELETE':
